@@ -1,0 +1,5 @@
+-   id: git-amend-date
+    name: amend git commit date
+    description: amend git commit date
+    entry: git-amend-date
+    language: script

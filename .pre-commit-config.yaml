@@ -1,0 +1,7 @@
+repos:
+-   repo: local
+    hooks:
+    -   id: git-amend-date
+        name: amend git commit date
+        always_run: true
+        stages: [post-commit]
