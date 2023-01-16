@@ -22,3 +22,4 @@ repos:
     rev: main
     hooks:
     -   id: git-amend-date
+        stages: [post-commit]

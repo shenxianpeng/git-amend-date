@@ -4,3 +4,4 @@
     entry: git-amend-date
     pass_filenames: false
     language: python
+    stage: post-commit
