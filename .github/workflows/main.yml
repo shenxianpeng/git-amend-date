@@ -1,0 +1,78 @@
+name: main
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    paths:
+      - "**.py"
+      - pyproject.toml
+      - ".github/workflows/main.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install package
+        run: |
+          pip install -e . pre-commit
+
+      - name: Run pre-commit
+        run: |
+          pre-commit run --all-files
+          pre-commit try-repo .
+
+      - name: Build wheel
+        run: python3 -m pip wheel --no-deps -w dist .
+      - name: Upload wheel as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: git-amend-date_wheel
+          path: ${{ github.workspace }}/dist/*.whl
+      - name: Run git-amend-date
+        run: |
+          python3 -m pip install dist/*.whl
+          git-amend-date -h
+
+      # - name: Collect Coverage
+      #   run: |
+      #     coverage run -m pytest
+      #     coverage report && coverage xml
+      # - uses: codecov/codecov-action@v3
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     files: ./coverage.xml
+      #     fail_ci_if_error: true # optional (default = false)
+      #     verbose: true # optional (default = false)
+
+  install:
+    needs: [build]
+    strategy:
+      fail-fast: false
+      matrix:
+        py: ['3.7', '3.8', '3.9', '3.10']
+        os: ['windows-latest', ubuntu-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.py }}
+
+      - name: Download wheel artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: git-amend-date_wheel
+          path: dist
+
+      - name: Install test
+        # using a wildcard as filename on Windows requires a bash shell
+        shell: bash
+        run: python3 -m pip install dist/*.whl

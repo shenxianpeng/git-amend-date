@@ -1,6 +1,8 @@
 # git-amend-date
 
-Never contribute to open source during working hours.
+[![main](https://github.com/shenxianpeng/git-amend-date/actions/workflows/main.yml/badge.svg)](https://github.com/shenxianpeng/git-amend-date/actions/workflows/main.yml)
+
+Amend git commit date from work time to personal time.
 
 ## Usage
 
@@ -17,7 +19,7 @@ You can pass parameter to specify `--start-time`, `--end-time` and `--overtime`.
 
 By default `--start-time=09:00`, `--end-time=18:00`, `--overtime=False`.
 
-Chinese developers may need the following settings :)
+For [996](https://github.com/996icu/996.ICU) developers :)
 
 ```yaml
 - repo: https://github.com/shenxianpeng/git-amend-date
@@ -38,12 +40,11 @@ usage: git-amend-date [-h] [--start-time START_TIME] [--end-time END_TIME] [--ov
 optional arguments:
   -h, --help            show this help message and exit
   --start-time START_TIME
-                        work start time. default is 09:00.
-  --end-time END_TIME   work end time. default is 18:00:00.
+                        workday start time. default is 09:00.
+  --end-time END_TIME   workday end time. default is 18:00:00.
   --overtime OVERTIME   work overtime on weekends. default is False.
 ```
 
 ## Have question or feedback?
 
 To provide feedback (requesting a feature or reporting a bug) please post to [issues](https://github.com/shenxianpeng/git-amend-date/issues).
-

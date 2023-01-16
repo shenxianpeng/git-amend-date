@@ -1,0 +1,43 @@
+name: release
+
+on:
+  release:
+    branches: [main]
+    types: [published]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      # use fetch --all for setuptools_scm to work
+      with:
+        fetch-depth: 0
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.x'
+
+    - name: Build wheel
+      run: |
+        # Install dependencies
+        python -m pip install --upgrade pip twine
+        # Build wheel
+        python -m pip wheel -w dist .
+        # Check distribution
+        twine check dist/git_amend_date*
+
+    - name: Publish package to TestPyPI
+      if: github.event_name == 'workflow_dispatch' && github.repository == 'shenxianpeng/git-amend-date'
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_TOKEN }}
+      run: twine upload --repository testpypi dist/git_amend_date*
+      continue-on-error: true
+
+    - name: Publish package to PyPI
+      if: github.event_name != 'workflow_dispatch' && github.repository == 'shenxianpeng/git-amend-date'
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      run: twine upload dist/git_amend_date*
