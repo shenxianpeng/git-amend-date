@@ -1,0 +1,3 @@
+.mypy_cache
+git_amend_date/__pycache__/
+git_amend_date.egg-info/

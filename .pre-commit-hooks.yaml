@@ -1,0 +1,6 @@
+-   id: git-amend-date
+    name: amend git commit date
+    description: Amend git commit date from work time to personal time.
+    entry: git-amend-date
+    pass_filenames: false
+    language: python
