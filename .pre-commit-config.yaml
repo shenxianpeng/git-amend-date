@@ -19,7 +19,7 @@ repos:
     -   id: mypy
         additional_dependencies: [types-all]
 -   repo: https://github.com/shenxianpeng/git-amend-date
-    rev: main
+    rev: v0.1.0
     hooks:
     -   id: git-amend-date
         stages: [post-commit]
