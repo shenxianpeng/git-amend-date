@@ -23,3 +23,9 @@ repos:
     hooks:
     -   id: git-amend-date
         stages: [post-commit]
+-   repo: https://github.com/commit-check/commit-check
+    rev: v0.3.2
+    hooks:
+    -   id: check-message
+    -   id: check-branch
+    -   id: check-author-email
