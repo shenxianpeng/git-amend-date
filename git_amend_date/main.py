@@ -2,15 +2,14 @@ from __future__ import annotations
 
 import argparse
 import subprocess
-from typing import Tuple
 from datetime import datetime, date
 
 TIME_FMT = "%H:%M:%S"
 
 
-def git_commit_amend_date(datetime: datetime, status: int) -> str:
+def git_commit_amend_date(datetime: datetime) -> str:
     """Update git commit date with new datetime."""
-    if status == 0:
+    if datetime is None:
         return ""
     commands = ['git', 'commit', '--amend', '--no-edit', '--date', f"{datetime}"]
     result = subprocess.run(
@@ -24,18 +23,14 @@ def git_commit_amend_date(datetime: datetime, status: int) -> str:
         return ""
 
 
-def get_commit_time(start_time: datetime, end_time: datetime, overtime: bool) -> Tuple[datetime, int]:
-    """Check start_time, end_time, and overtime
-    then decide if need to update commit time.
-    returns: datetime and status.
-        datetime: update git commit date to
-        status: 0 - no need to update; 1 - need to update.
+def get_commit_time(start_time: datetime, end_time: datetime, overtime: bool) -> datetime | None:
+    """Check start_time, end_time, and overtime then decide if need to update commit time.
+    returns: datetime
     """
     time_str = datetime.now().strftime(TIME_FMT)
     current_time = datetime.now().strptime(time_str, TIME_FMT)
     today = date.today()
     weekday = datetime.today().weekday()
-    current_datetime = datetime.combine(today, current_time.time())
 
     offset = (end_time - start_time) / 2
     start_offset = current_time - start_time
@@ -43,16 +38,16 @@ def get_commit_time(start_time: datetime, end_time: datetime, overtime: bool) ->
 
     if not overtime and weekday in (5, 6):
         # commit on weekends and not overtime.
-        return (current_datetime, 0)
+        return None
     if current_time >= end_time:
         # commit after get off work on weekday
-        return (current_datetime, 0)
+        return None
     if start_offset >= end_offset:
         # commit in the afternoon on weekday
-        return (datetime.combine(today, (end_time + (offset - end_offset)).time()), 1)
+        return datetime.combine(today, (end_time + (offset - end_offset)).time())
     else:
         # commit in the morning on weekday
-        return (datetime.combine(today, (start_time - (offset - start_offset)).time()), 1)
+        return datetime.combine(today, (start_time - (offset - start_offset)).time())
 
 
 def main():
@@ -91,11 +86,11 @@ def main():
         raise argparse.ArgumentTypeError(
             start_time,
             end_time,
-            "end_time must later than start_time."
+            "start_time must earlier than end_time."
         )
-    commit_time, status = get_commit_time(start_time, end_time, overtime)
-    if status == 1:
-        print(git_commit_amend_date(commit_time, status))
+    commit_time = get_commit_time(start_time, end_time, overtime)
+    if commit_time:
+        print(git_commit_amend_date(commit_time))
 
 
 if __name__ == "__main__":
