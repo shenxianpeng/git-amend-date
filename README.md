@@ -3,7 +3,7 @@
 [![main](https://github.com/shenxianpeng/git-amend-date/actions/workflows/main.yml/badge.svg)](https://github.com/shenxianpeng/git-amend-date/actions/workflows/main.yml)
 [![commit-check](https://img.shields.io/badge/commit--check-enabled-brightgreen?logo=Git&logoColor=white)](https://github.com/commit-check/commit-check)
 
-Amend git commit date from work time to personal time. (do not make non-work-related commits.)
+Amend git commit date from work time to personal time (Not push non-work commits during working time).
 
 ## Usage
 
