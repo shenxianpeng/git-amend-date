@@ -17,7 +17,6 @@ repos:
     rev: v0.991
     hooks:
     -   id: mypy
-        additional_dependencies: [types-all]
 -   repo: https://github.com/shenxianpeng/git-amend-date
     rev: v0.1.0
     hooks:
