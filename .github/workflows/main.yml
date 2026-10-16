@@ -15,8 +15,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.x'
 
@@ -32,7 +32,7 @@ jobs:
       - name: Build wheel
         run: python3 -m pip wheel --no-deps -w dist .
       - name: Upload wheel as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: git-amend-date_wheel
           path: ${{ github.workspace }}/dist/*.whl
@@ -57,17 +57,17 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        py: ['3.7', '3.8', '3.9', '3.10']
+        py: ['3.8', '3.9', '3.10']
         os: ['windows-latest', ubuntu-latest]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.py }}
 
       - name: Download wheel artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v8
         with:
           name: git-amend-date_wheel
           path: dist
